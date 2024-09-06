@@ -30,15 +30,27 @@ export class TasksService {
       dueDate: '2024-06-15',
     },
   ];
+
+  getAllTasks() {
+    if (localStorage.getItem('tasks')) {
+      this.tasks = JSON.parse(localStorage.getItem('tasks')!);
+    }
+  }
+  saveTasks(): void {
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
+  }
   getUserTasks(userId: string): Task[] {
+    this.getAllTasks();
     return this.tasks.filter((task) => task.userId === userId);
   }
 
   completeTask(taskId: string): void {
     this.tasks = this.tasks.filter((task) => task.id !== taskId);
+    this.saveTasks();
   }
 
   addNewTask(task: Task): void {
     this.tasks.unshift(task);
+    this.saveTasks();
   }
 }
